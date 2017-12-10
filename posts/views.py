@@ -6,7 +6,6 @@ from django.views import generic
 from django.contrib.auth import get_user_model
 from braces.views import SelectRelatedMixin
 from . import models
-from . import forms
 
 
 User = get_user_model()
@@ -52,7 +51,7 @@ class CreatePost(LoginRequiredMixin, SelectRelatedMixin, generic.CreateView):
     model = models.Post
 
     def form_valid(self, form):
-        self.object = form.save(commit=false)
+        self.object = form.save(commit=False)
         self.object.user = self.request.user
         self.object.save()
         return super().form_valid(form)
