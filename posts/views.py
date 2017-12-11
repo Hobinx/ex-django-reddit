@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.db import IntegrityError
 from django.urls import reverse_lazy
 from django.http import Http404
 from django.views import generic
@@ -22,7 +23,7 @@ class UserPosts(generic.ListView):
 
     def get_queryset(self):
         try:
-            self.post.user = User.objects.prefetch_related(
+            self.post_user = User.objects.prefetch_related(
                 'posts').get(username__iexact=self.kwargs.get('username'))
         except User.DoesNotExist:
             raise Http404
@@ -53,8 +54,13 @@ class CreatePost(LoginRequiredMixin, SelectRelatedMixin, generic.CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
-        self.object.save()
-        return super().form_valid(form)
+        try:
+            self.object.save()
+        except IntegrityError:
+            messages.warning(self.request, 'You alreay have this post!')
+            raise Http404
+        else:
+            return super().form_valid(form)
 
 
 class DeletePost(LoginRequiredMixin, SelectRelatedMixin, generic.DeleteView):

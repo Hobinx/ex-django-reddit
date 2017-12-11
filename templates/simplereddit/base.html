@@ -17,7 +17,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
           integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https//fonts.googleapis.com/css?family=Montserrat">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
   <link rel="stylesheet" href="{% static 'simplereddit/css/main.css' %}">
   <title>Simple Reddit</title>
 </head>
@@ -29,12 +29,12 @@
 
       <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
-          <li><a href="">Post</a></li>
-          <li><a href="">Groups</a></li>
-          <li><a href="">Create Group</a></li>
+          <li><a href="{% url 'posts:create' %}">Post</a></li>
+          <li><a href="{% url 'groups:all' %}">Groups</a></li>
+          <li><a href="{% url 'groups:create' %}">Create Group</a></li>
           <li><a href="{% url 'accounts:logout' %}">Log Out</a></li>
         {% else %}
-          <li><a href="">Groups</a></li>
+          <li><a href="{% url 'groups:all' %}">Groups</a></li>
           <li><a href="{% url 'accounts:login' %}">Log In</a></li>
           <li><a href="{% url 'accounts:signup' %}">Sign Up</a></li>
         {% endif %}
